@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { config } from '@/config/config';
+import gui from '@/utils/gui';
 
 const TEXTURE_SIZE = 128;
 const NIGHT_OPACITY = 0.35;
@@ -43,8 +44,9 @@ const material = new THREE.MeshBasicMaterial({
 });
 
 // width: footprint across the light direction. objectHeight: how tall the thing casting it is,
-// which is what decides how far the shadow is thrown.
-export function createContactShadow(width, objectHeight = width) {
+// which decides how far the shadow is thrown. sideOffset nudges it across the light to sit under
+// the base of a billboard, which leans toward the camera rather than standing over its origin.
+export function createContactShadow(width, objectHeight = width, sideOffset = 0) {
   const holder = new THREE.Group();
   holder.rotation.y = shadowHeading;
 
@@ -54,7 +56,7 @@ export function createContactShadow(width, objectHeight = width) {
   shadow.rotation.x = -Math.PI * 0.5;
   shadow.scale.set(width, length, 1);
   // Thrown along the light rather than centred, so it reaches out from the base of the object
-  shadow.position.set(0, 0.004, (length - width) * 0.5);
+  shadow.position.set(sideOffset, 0.002, (length - width) * 0.5);
 
   holder.add(shadow);
   return holder;

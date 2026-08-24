@@ -7,7 +7,7 @@ import { createContactShadow } from '@/scene/environment/contactShadow';
 const blockSide = Math.sqrt(assetConfig.well.blockSize) * globalConfig.grid.cellSize;
 
 // Measured opaque bounds of well.webp, as a fraction of the canvas
-const ARTWORK_WIDTH = 0.587;
+const ARTWORK_WIDTH = 1;
 const ARTWORK_HEIGHT = 0.758;
 
 const wellTexture = textureLoader.load('./sprite/well.webp');
@@ -24,7 +24,9 @@ const well = async (point) => {
   sprite.position.y = blockSide * 0.5;
 
   group.add(sprite);
-  group.add(createContactShadow(scale * ARTWORK_WIDTH * 0.85, scale * ARTWORK_HEIGHT));
+  group.add(
+    createContactShadow(scale * ARTWORK_WIDTH * 0.7, scale * ARTWORK_HEIGHT, scale * 0.1)
+  );
   return group;
 };
 

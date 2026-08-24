@@ -34,7 +34,7 @@ const house = async (point) => {
   sprite.userData.baseTint = HOUSE_TINT;
 
   group.add(sprite);
-  group.add(createContactShadow(width * 0.5, height * HOUSE_ARTWORK_HEIGHT));
+  group.add(createContactShadow(width * 0.5, height * HOUSE_ARTWORK_HEIGHT, height * 0.1));
   return group;
 };
 

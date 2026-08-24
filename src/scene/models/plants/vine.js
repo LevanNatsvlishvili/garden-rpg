@@ -8,7 +8,7 @@ const blockSide = assetConfig.vine.blockSize * globalConfig.grid.cellSize;
 const { placementMinus } = assetConfig.global;
 
 // Measured opaque bounds of the crop sprites, as a fraction of the canvas
-const ARTWORK_WIDTH = 0.722;
+const ARTWORK_WIDTH = 1;
 const ARTWORK_HEIGHT = 0.6;
 
 const ripeTexture = textureLoader.load('./sprite/vine/ripe.webp');
@@ -38,7 +38,8 @@ const vine = async (point) => {
   // Keep the shadow last: spawnVine.js reads children[0] and children[1] by index
   const shadow = createContactShadow(
     blockSide * ARTWORK_WIDTH * 0.75,
-    blockSide * ARTWORK_HEIGHT
+    blockSide * ARTWORK_HEIGHT,
+    blockSide * 0.1
   );
   shadow.position.x = point.x + placementMinus;
   shadow.position.z = point.z + placementMinus;

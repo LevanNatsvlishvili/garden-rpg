@@ -8,6 +8,7 @@ const blockSide = Math.sqrt(assetConfig.well.blockSize) * globalConfig.grid.cell
 
 // Measured opaque bounds of well.webp, as a fraction of the canvas
 const ARTWORK_WIDTH = 0.587;
+const ARTWORK_HEIGHT = 0.758;
 
 const wellTexture = textureLoader.load('./sprite/well.webp');
 wellTexture.colorSpace = THREE.SRGBColorSpace;
@@ -23,7 +24,7 @@ const well = async (point) => {
   sprite.position.y = blockSide * 0.5;
 
   group.add(sprite);
-  group.add(createContactShadow(scale * ARTWORK_WIDTH * 0.85));
+  group.add(createContactShadow(scale * ARTWORK_WIDTH * 0.85, scale * ARTWORK_HEIGHT));
   return group;
 };
 

@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { assetConfig } from '@/config/assetConfig';
 import { config as globalConfig } from '@/config/config';
 import { createContactShadow } from '@/scene/environment/contactShadow';
-import gui from '@/utils/gui';
 
 const { xBlocks, yBlocks } = assetConfig.house;
 const { cellSize } = globalConfig.grid;
@@ -14,6 +13,9 @@ const height = yBlocks * cellSize * 1.75;
 const houseTexture = textureLoader.load('./sprite/house.png');
 houseTexture.colorSpace = THREE.SRGBColorSpace;
 const HOUSE_TINT = 0.5;
+
+// Measured opaque height of house.png, as a fraction of the canvas
+const HOUSE_ARTWORK_HEIGHT = 0.573;
 
 const houseMat = new THREE.SpriteMaterial({
   map: houseTexture,
@@ -31,25 +33,8 @@ const house = async (point) => {
   // Without this, setNightTint resets the material tint to full brightness at the first nightfall
   sprite.userData.baseTint = HOUSE_TINT;
 
-  gui
-    .add(sprite.position, 'y')
-    .min(0)
-    .max(height * 0.25)
-    .step(0.01)
-    .name('House Position Y');
-
-  gui
-    .add(sprite.rotation, 'z')
-    .min(0)
-    .max(Math.PI * 2)
-    .step(0.01)
-    .name('House Rotation Z');
-  gui.add(sprite.scale, 'x').min(0).max(10).step(0.01).name('House Scale X');
-  gui.add(sprite.scale, 'y').min(0).max(10).step(0.01).name('House Scale Y');
-  gui.add(sprite.scale, 'z').min(0).max(10).step(0.01).name('House Scale Z');
-
   group.add(sprite);
-  group.add(createContactShadow(width * 0.5));
+  group.add(createContactShadow(width * 0.5, height * HOUSE_ARTWORK_HEIGHT));
   return group;
 };
 

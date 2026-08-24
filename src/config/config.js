@@ -78,12 +78,12 @@ export const config = {
     },
     directional: {
       color: '#fff4e0',
-      intensity: 2.8,
+      intensity: 1.5,
       nightIntensity: 0,
-      position: { x: -1.5, y: 2, z: -8 },
+      position: { x: -2, y: 8, z: -7 },
       shadow: {
         mapSize: 1024,
-        camera: { top: 8, right: 8, bottom: -8, left: -8, near: 1, far: 15 },
+        camera: { top: 8, right: 8, bottom: -8, left: -8, near: 1, far: 25 },
       },
     },
   },

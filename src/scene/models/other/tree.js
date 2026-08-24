@@ -9,6 +9,7 @@ const blockSide = assetConfig.tree.blockSize * globalConfig.grid.cellSize;
 // Measured opaque bounds of tree.webp: the artwork covers barely half the canvas, so a shadow
 // sized from the sprite scale is far wider than the tree. Trimmed again for the canopy overhang.
 const ARTWORK_WIDTH = 0.516;
+const ARTWORK_HEIGHT = 0.833;
 
 const treeTexture = textureLoader.load('./sprite/tree.webp');
 treeTexture.colorSpace = THREE.SRGBColorSpace;
@@ -37,7 +38,7 @@ const tree = async (point) => {
   sprite.material.color.setScalar(tint);
 
   group.add(sprite);
-  group.add(createContactShadow(scale * ARTWORK_WIDTH * 0.65));
+  group.add(createContactShadow(scale * ARTWORK_WIDTH * 0.65, scale * ARTWORK_HEIGHT));
   return group;
 };
 

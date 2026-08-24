@@ -11,7 +11,7 @@ async function spawnTree(point) {
   const model = await models.treeModel.default(point);
   scene.add(model);
   state.money -= assetConfig.tree.price;
-  state.trees.push({ x: point.x, z: point.z });
+  state.trees.push({ x: point.x, z: point.z, ref: model });
   if (state.money < assetConfig.tree.price) {
     deactivate();
   }

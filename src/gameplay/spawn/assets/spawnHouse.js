@@ -3,7 +3,6 @@ import models from '@/store/models';
 import { assetConfig } from '@/config/assetConfig';
 import { snapToGrid } from '@/utils/placementTool';
 import * as THREE from 'three';
-import { markOccupied } from '@/utils/placementTool';
 
 const { xBlocks, yBlocks } = assetConfig.house;
 export const housePoint = new THREE.Vector3(
@@ -15,8 +14,6 @@ export const housePoint = new THREE.Vector3(
 // Starter Tools
 async function spawnHouse() {
   scene.add(models.houseModel);
-  markOccupied(housePoint.x, housePoint.z, xBlocks, yBlocks);
-
   return models.houseModel;
 }
 

@@ -1,5 +1,6 @@
 import { scene } from '@/utils/renderer';
 import { clearOccupied, deactivate } from '@/utils/placementTool';
+import { markStarterLayout } from '@/utils/starterLayout';
 import { ambientLight, directionalLight } from '@/scene/lights/lights';
 import { torchLight } from '@/scene/models/other/character';
 import { setNightTint } from '@/utils/setNightTint';
@@ -25,6 +26,11 @@ export function resetGame() {
     scene.remove(state.wellModel);
   }
 
+  // Remove player-planted trees from scene
+  for (const entry of state.trees) {
+    if (entry.ref) scene.remove(entry.ref);
+  }
+
   // Reset character position
   if (models.characterModel) {
     const { x, y, z } = config.character.startingPosition;
@@ -37,14 +43,16 @@ export function resetGame() {
   torchLight.intensity = 0;
   setNightTint(false);
 
-  // Clear placement grid
+  // Clear placement grid, then reclaim the cells the starter layout still occupies
   clearOccupied();
+  markStarterLayout();
   deactivate();
 
   // Reset state
   state.tomatoes = [];
   state.cucumbers = [];
   state.vines = [];
+  state.trees = [];
   state.monsters = [];
   state.wellModel = null;
   state.money = assetConfig.global.startingMoney;

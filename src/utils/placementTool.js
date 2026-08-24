@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { camera, renderer, scene } from './renderer';
 import { config } from '../config/config';
+import models from '../store/models';
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -55,6 +56,7 @@ let spawnCallback = null;
 let currentXSide = 1;
 let currentZSide = 1;
 let canPlace = true;
+let lastPoint = null;
 
 function cellKey(x, z) {
   return `${x.toFixed(4)},${z.toFixed(4)}`;
@@ -82,7 +84,22 @@ function getCellsForBlock(cx, cz, xSide, zSide) {
   return cells;
 }
 
+// The character moves, so it is never written into the occupancy grid. Its footprint is tested
+// directly instead, matching the half-extent characterMobility collides with.
+function overlapsCharacter(cx, cz, xSide, zSide) {
+  const character = models.characterModel;
+  if (!character) return false;
+
+  const halfX = xSide * cellSize * 0.5 + cellSize;
+  const halfZ = zSide * cellSize * 0.5 + cellSize;
+
+  return (
+    Math.abs(character.position.x - cx) < halfX && Math.abs(character.position.z - cz) < halfZ
+  );
+}
+
 function isBlocked(cx, cz, xSide, zSide) {
+  if (overlapsCharacter(cx, cz, xSide, zSide)) return true;
   const cells = getCellsForBlock(cx, cz, xSide, zSide);
   return cells.some((key) => occupiedCells.has(key));
 }
@@ -142,6 +159,20 @@ function getGridPoint(event) {
   };
 }
 
+function refreshHighlight() {
+  if (!lastPoint) return;
+
+  canPlace = !isBlocked(lastPoint.x, lastPoint.z, currentXSide, currentZSide);
+  highlightMat.color.setHex(canPlace ? highlightColor : BLOCKED_COLOR);
+  highlightMat.opacity = canPlace ? highlightOpacity : 0.45;
+}
+
+// Driven from the render loop: the character can walk under a cursor that has not moved since,
+// so the highlight would otherwise keep reading as placeable
+export function updatePlacement() {
+  if (active) refreshHighlight();
+}
+
 function onPointerMove(event) {
   if (!active || !groundMesh) return;
 
@@ -151,10 +182,10 @@ function onPointerMove(event) {
     highlightMesh.position.z = snapped.z;
     highlightMesh.visible = true;
 
-    canPlace = !isBlocked(snapped.x, snapped.z, currentXSide, currentZSide);
-    highlightMat.color.setHex(canPlace ? highlightColor : BLOCKED_COLOR);
-    highlightMat.opacity = canPlace ? highlightOpacity : 0.45;
+    lastPoint = snapped;
+    refreshHighlight();
   } else {
+    lastPoint = null;
     highlightMesh.visible = false;
   }
 }
@@ -163,10 +194,13 @@ function onPointerDown(event) {
   if (!active || !groundMesh) return;
 
   const snapped = getGridPoint(event);
-  if (snapped && spawnCallback && canPlace) {
-    markOccupied(snapped.x, snapped.z, currentXSide, currentZSide);
-    spawnCallback(new THREE.Vector3(snapped.x, snapped.y, snapped.z));
-  }
+  if (!snapped || !spawnCallback) return;
+
+  // Re-tested here rather than trusting canPlace, which is only as fresh as the last pointermove
+  if (isBlocked(snapped.x, snapped.z, currentXSide, currentZSide)) return;
+
+  markOccupied(snapped.x, snapped.z, currentXSide, currentZSide);
+  spawnCallback(new THREE.Vector3(snapped.x, snapped.y, snapped.z));
 }
 
 function showGrid(visible) {
@@ -197,6 +231,7 @@ export function deactivate() {
   active = false;
   groundMesh = null;
   spawnCallback = null;
+  lastPoint = null;
   showGrid(false);
   _onDeactivate?.();
 }

@@ -13,6 +13,7 @@ import { initPixiUI } from './ui/pixiApp';
 import { buildGameUI } from './ui/gameUI';
 import { showLoadingScreen, updateLoadingProgress, hideLoadingScreen } from './ui/loadingScreen';
 import { onLoadProgress } from './utils/loader/loadingManager';
+import { updatePlacement } from './utils/placementTool';
 import './styles/style.css';
 
 async function init() {
@@ -54,6 +55,7 @@ async function init() {
       updateCameraFollow(models.characterModel, deltaSec);
     }
     updateAllEnemies(deltaSec);
+    updatePlacement();
 
     controls.update();
     renderer.render(scene, camera);

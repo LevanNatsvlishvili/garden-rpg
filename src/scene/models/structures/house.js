@@ -8,12 +8,18 @@ import gui from '@/utils/gui';
 const { xBlocks, yBlocks } = assetConfig.house;
 const { cellSize } = globalConfig.grid;
 
-const width = xBlocks * cellSize * 2.5;
-const height = yBlocks * cellSize * 2.5;
+const width = xBlocks * cellSize * 2;
+const height = yBlocks * cellSize * 1.75;
 
 const houseTexture = textureLoader.load('./sprite/house.png');
 houseTexture.colorSpace = THREE.SRGBColorSpace;
-const houseMat = new THREE.SpriteMaterial({ map: houseTexture, alphaTest: 0.5 });
+const HOUSE_TINT = 0.5;
+
+const houseMat = new THREE.SpriteMaterial({
+  map: houseTexture,
+  color: new THREE.Color(HOUSE_TINT, HOUSE_TINT, HOUSE_TINT),
+  alphaTest: 0.5,
+});
 
 const house = async (point) => {
   const group = new THREE.Group();
@@ -22,6 +28,8 @@ const house = async (point) => {
   const sprite = new THREE.Sprite(houseMat.clone());
   sprite.scale.set(width, height, 1);
   sprite.position.y = height * 0.25;
+  // Without this, setNightTint resets the material tint to full brightness at the first nightfall
+  sprite.userData.baseTint = HOUSE_TINT;
 
   gui
     .add(sprite.position, 'y')

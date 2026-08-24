@@ -13,6 +13,8 @@ const moveDir = new THREE.Vector3();
 
 const SPEED = config.character.speed;
 const RADIUS = config.grid.cellSize;
+// Stop just short of the ground plane edge, so the player never walks off the world
+const BOUND = config.ground.size * 0.5 - config.grid.cellSize * 4;
 
 window.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowUp') keys.up = true;
@@ -82,6 +84,9 @@ export function updateCharacter(model, delta) {
       model.position.z = nextZ;
     }
   }
+
+  model.position.x = THREE.MathUtils.clamp(model.position.x, -BOUND, BOUND);
+  model.position.z = THREE.MathUtils.clamp(model.position.z, -BOUND, BOUND);
 
   model.rotation.y = Math.atan2(moveDir.x, moveDir.z);
 }

@@ -2,22 +2,18 @@ export const trees = [
   {
     x: -1,
     z: 0.4,
-    priority: true,
   },
   {
     x: -0.5,
     z: 0.5,
-    priority: true,
   },
   {
     x: -0.7000000000000001,
     z: 0.6000000000000001,
-    priority: true,
   },
   {
     x: -0.9,
     z: 0.7000000000000001,
-    priority: true,
   },
   {
     x: -1.1,

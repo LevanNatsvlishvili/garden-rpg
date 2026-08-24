@@ -2,8 +2,9 @@ import * as THREE from 'three';
 
 export const config = {
   camera: {
-    fov: 10.5,
-    position: { x: 10, y: 9, z: 10 },
+    fov: 26,
+    position: { x: 3.1, y: 2.8, z: 3.1 },
+    followLerp: 0.1,
   },
 
   controls: {
@@ -65,17 +66,19 @@ export const config = {
     pixelRatio: Math.min(window.devicePixelRatio, 2),
     shadowMap: true,
     shadowType: THREE.PCFSoftShadowMap,
+    toneMapping: THREE.ACESFilmicToneMapping,
+    toneMappingExposure: 1.1,
   },
 
   lights: {
     ambient: {
-      color: '#ffffff',
-      intensity: 5,
-      nightIntensity: 0.4,
+      color: '#b9d5ff',
+      intensity: 1.2,
+      nightIntensity: 0.25,
     },
     directional: {
-      color: '#ffffff',
-      intensity: 1,
+      color: '#fff4e0',
+      intensity: 2.8,
       nightIntensity: 0,
       position: { x: -1.5, y: 2, z: -8 },
       shadow: {
@@ -87,7 +90,7 @@ export const config = {
 
   ground: {
     size: 10,
-    color: 'green',
+    color: '#7cab53',
     positionY: -0.5,
   },
 
@@ -101,6 +104,7 @@ export const config = {
 
   environment: {
     background: 0x87ceeb,
+    fog: { color: 0x87ceeb, near: 6, far: 9.5 },
   },
 
   fps: {

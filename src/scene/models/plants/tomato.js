@@ -2,17 +2,18 @@ import textureLoader from '@/utils/loader/textureLoader';
 import * as THREE from 'three';
 import { assetConfig } from '@/config/assetConfig';
 import { config as globalConfig } from '@/config/config';
+import { createContactShadow } from '@/scene/environment/contactShadow';
 
 const blockSide = assetConfig.tomato.blockSize * globalConfig.grid.cellSize;
 const { placementMinus } = assetConfig.global;
 
 const ripeTexture = textureLoader.load('./sprite/tomato/ripe.webp');
 ripeTexture.colorSpace = THREE.SRGBColorSpace;
-const ripeMat = new THREE.SpriteMaterial({ map: ripeTexture, depthWrite: false });
+const ripeMat = new THREE.SpriteMaterial({ map: ripeTexture, alphaTest: 0.5 });
 
 const growingTexture = textureLoader.load('./sprite/tomato/growing.webp');
 growingTexture.colorSpace = THREE.SRGBColorSpace;
-const growingMat = new THREE.SpriteMaterial({ map: growingTexture, depthWrite: false });
+const growingMat = new THREE.SpriteMaterial({ map: growingTexture, alphaTest: 0.5 });
 
 const tomato = async (point, status) => {
   const group = new THREE.Group();
@@ -38,6 +39,13 @@ const tomato = async (point, status) => {
 
   group.add(ripeSprite);
   group.add(growingSprite);
+
+  // Keep the shadow last: spawnTomato.js reads children[0] and children[1] by index
+  const shadow = createContactShadow(blockSide * 0.45);
+  shadow.position.x = point.x + placementMinus;
+  shadow.position.z = point.z + placementMinus;
+  group.add(shadow);
+
   return group;
 };
 

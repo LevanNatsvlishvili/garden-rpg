@@ -1,5 +1,6 @@
 import { camera, renderer, scene } from './utils/renderer';
 import { controls } from './utils/controls/controls';
+import { updateCameraFollow } from './utils/controls/cameraFollow';
 import windowResizer from './utils/windowResizer';
 import { setupScene, setupRest } from './scene';
 import models from './store/models';
@@ -50,6 +51,7 @@ async function init() {
       updateCharacter(models.characterModel, deltaSec);
       updateCombat(deltaSec);
       updateAnimations(deltaSec);
+      updateCameraFollow(models.characterModel, deltaSec);
     }
     updateAllEnemies(deltaSec);
 

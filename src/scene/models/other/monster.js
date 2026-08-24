@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import gltfLoader from '@/utils/loader/gltfLoader';
+import { camera } from '@/utils/renderer';
 
 const BAR_WIDTH = 0.25;
 const BAR_HEIGHT = 0.04;
@@ -23,8 +24,8 @@ export function createHealthBar() {
   group.add(fgMesh);
   group.renderOrder = 1;
 
-  // Fixed rotation toward camera (always at 10, 9, 10)
-  group.lookAt(new THREE.Vector3(10, 9, 10));
+  // Camera orientation is locked, so copying it once keeps the bar facing the viewer
+  group.quaternion.copy(camera.quaternion);
 
   return { group, fgMesh, barWidth: BAR_WIDTH };
 }

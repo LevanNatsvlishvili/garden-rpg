@@ -117,7 +117,7 @@ export function buildShop(onClose, conditions, tutorialIndex) {
     btnSize: 'lg',
     onClick: () => {
       state.potions += 1;
-      state.money -= config.items.items.healthPottion.price;
+      state.money -= config.items.healthPottion.price;
     },
     condition: () =>
       state.money >= config.items.healthPottion.price && state.isDay && state.isFirstHarvestTaken,

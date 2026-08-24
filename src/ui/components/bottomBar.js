@@ -52,6 +52,9 @@ export function buildBottomBar({ conditions, onShopToggle, onFinishDay, onHarves
     label: 'Potion',
     emoji: '🧪',
     onClick: () => {
+      if (state.potions <= 0) return;
+      state.potions -= 1;
+
       if (
         state.characterCurrentHealth + config.items.healthPottion.healthRestore >
         state.characterMaxHealth

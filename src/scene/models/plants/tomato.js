@@ -7,6 +7,9 @@ import { createContactShadow } from '@/scene/environment/contactShadow';
 const blockSide = assetConfig.tomato.blockSize * globalConfig.grid.cellSize;
 const { placementMinus } = assetConfig.global;
 
+// Measured opaque bounds of the crop sprites, as a fraction of the canvas
+const ARTWORK_WIDTH = 0.722;
+
 const ripeTexture = textureLoader.load('./sprite/tomato/ripe.webp');
 ripeTexture.colorSpace = THREE.SRGBColorSpace;
 const ripeMat = new THREE.SpriteMaterial({ map: ripeTexture, alphaTest: 0.5 });
@@ -41,7 +44,7 @@ const tomato = async (point, status) => {
   group.add(growingSprite);
 
   // Keep the shadow last: spawnTomato.js reads children[0] and children[1] by index
-  const shadow = createContactShadow(blockSide * 0.45);
+  const shadow = createContactShadow(blockSide * ARTWORK_WIDTH * 0.75);
   shadow.position.x = point.x + placementMinus;
   shadow.position.z = point.z + placementMinus;
   group.add(shadow);

@@ -31,7 +31,7 @@ export const assetConfig = {
   },
 
   global: {
-    placementMinus: 0.05,
+    placementMinus: 0.025,
     startingMoney: 10,
   },
 };

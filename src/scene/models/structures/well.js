@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { assetConfig } from '@/config/assetConfig';
 import { config as globalConfig } from '@/config/config';
 import { createContactShadow } from '@/scene/environment/contactShadow';
+import gui from '@/utils/gui';
 
 const blockSide = Math.sqrt(assetConfig.well.blockSize) * globalConfig.grid.cellSize;
 
@@ -21,12 +22,11 @@ const well = async (point) => {
   const scale = blockSide * 1.25;
   const sprite = new THREE.Sprite(wellMat.clone());
   sprite.scale.set(scale, scale, scale);
-  sprite.position.y = blockSide * 0.5;
+  sprite.position.y = blockSide * 0.375;
+  gui.add(sprite.position, 'y').min(0).max(1).step(0.01).name('Sprite Position Y');
 
   group.add(sprite);
-  group.add(
-    createContactShadow(scale * ARTWORK_WIDTH * 0.7, scale * ARTWORK_HEIGHT, scale * 0.1)
-  );
+  group.add(createContactShadow(scale * ARTWORK_WIDTH * 0.7, scale * ARTWORK_HEIGHT, scale * 0.1));
   return group;
 };
 

@@ -6,6 +6,19 @@
 html,
 body {
   overflow: hidden;
+  /* Stops pull-to-refresh and rubber-banding fighting the joystick */
+  overscroll-behavior: none;
+  /* Matches the loading screen, so there is no white flash before the first frame */
+  background: #0a0e1a;
+}
+
+body {
+  /* The game owns every gesture: no scroll, pinch-zoom or double-tap zoom stealing touches
+     from the joystick and attack button */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .webgl {

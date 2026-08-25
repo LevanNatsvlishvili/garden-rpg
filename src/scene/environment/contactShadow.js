@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { config } from '@/config/config';
-import gui from '@/utils/gui';
 
 const TEXTURE_SIZE = 128;
 const NIGHT_OPACITY = 0.35;

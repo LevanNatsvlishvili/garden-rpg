@@ -4,6 +4,7 @@ import { buildShop } from './components/shop';
 import { buildTopbar } from './components/topbar';
 import { buildTutorialTips } from './components/tutorialTips';
 import { buildGameOverScreen } from './components/gameOverScreen';
+import { buildDamageFlash } from './components/damageFlash';
 import { buildJoystick } from './components/joystick';
 import { buildAttackButton } from './components/attackButton';
 import { onPlacementChange } from '@/utils/placementTool';
@@ -37,6 +38,7 @@ export function buildGameUI() {
     },
   });
 
+  const damageFlash = buildDamageFlash();
   const gameOverScreen = buildGameOverScreen();
 
   const joystick = buildJoystick();
@@ -47,6 +49,7 @@ export function buildGameUI() {
   app.stage.addChild(tutorialTips.container);
   app.stage.addChild(shop.container);
   app.stage.addChild(bottomBar.container);
+  app.stage.addChild(damageFlash.container);
   app.stage.addChild(gameOverScreen.container);
 
   window.addEventListener('gameover', () => gameOverScreen.show());
@@ -61,6 +64,7 @@ export function buildGameUI() {
     topbar.layout();
     bottomBar.layout();
     tutorialTips.layout(tutorialIndex);
+    damageFlash.layout();
 
     if (shopOpen) {
       shop.layout();
@@ -111,6 +115,7 @@ export function buildGameUI() {
     bottomBar.update(tutorialIndex);
     shop.update(tutorialIndex);
     tutorialTips.update(tutorialIndex);
+    damageFlash.update(app.ticker.deltaMS / 1000);
   });
 
   window.addEventListener('resize', () => {

@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { scene } from '@/utils/renderer';
 import { config } from '@/config/config';
 import state from '@/store/state';
@@ -18,7 +19,7 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function spawnMonster() {
   const position = getRandomSpawnPoint();
-  const { model, mixer, play } = await models.monsterModel.default(position);
+  const { model, mixer, play, flashMaterials } = await models.monsterModel.default(position);
 
   const healthBar = createHealthBar();
   healthBar.group.position.set(position.x, position.y + BAR_Y_OFFSET, position.z);
@@ -31,6 +32,9 @@ export async function spawnMonster() {
     attackTimer: 0,
     healthBar,
     attackDamage,
+    flashMaterials,
+    hitTimer: 0,
+    knockback: new THREE.Vector3(),
   };
   state.monsters.push(entry);
 

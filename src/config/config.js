@@ -110,4 +110,12 @@ export const config = {
   fps: {
     limit: 60,
   },
+
+  feedback: {
+    hitFlashDuration: 0.18,
+    knockbackSpeed: 1.1,
+    knockbackDamping: 9,
+    damageFlashDuration: 0.35,
+    damageFlashAlpha: 0.28,
+  },
 };

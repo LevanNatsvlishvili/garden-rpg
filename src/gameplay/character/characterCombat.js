@@ -7,6 +7,7 @@ import { finishNight } from '../actions/finishNight';
 import { playOnce, play } from './characterAnimation';
 
 const { attackRange, attackCooldown } = config.character;
+const { hitFlashDuration, knockbackSpeed } = config.feedback;
 
 let cooldownTimer = 0;
 let spaceDown = false;
@@ -59,6 +60,12 @@ export function updateCombat(delta) {
   if (!target) return;
 
   target.health -= state.attackDamage;
+  target.hitTimer = hitFlashDuration;
+  target.knockback
+    .subVectors(target.model.position, player.position)
+    .setY(0)
+    .normalize()
+    .multiplyScalar(knockbackSpeed);
 
   if (target.health <= 0) {
     scene.remove(target.model);

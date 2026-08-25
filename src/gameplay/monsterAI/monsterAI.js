@@ -4,9 +4,11 @@ import { isCellOccupied } from '@/utils/placementTool';
 import models from '@/store/models';
 import state from '@/store/state';
 import gameover from '../gameover';
-import { BAR_Y_OFFSET } from '@/scene/models/other/monster';
+import playerHit from '../playerHit';
+import { BAR_Y_OFFSET, setHitFlash } from '@/scene/models/other/monster';
 
 const { speed, attackRange, attackDamage, attackCooldown } = config.monster;
+const { hitFlashDuration, knockbackDamping } = config.feedback;
 const RADIUS = config.grid.cellSize;
 
 const direction = new THREE.Vector3();
@@ -44,8 +46,36 @@ function updateHealthBar(entry) {
   fgMesh.position.x = -(barWidth / 2) * (1 - ratio);
 }
 
+// Eases the impact tint back to the material's normal emissive
+function updateHitFlash(entry, delta) {
+  if (entry.hitTimer <= 0) return;
+
+  entry.hitTimer = Math.max(0, entry.hitTimer - delta);
+  setHitFlash(entry.flashMaterials, entry.hitTimer / hitFlashDuration);
+}
+
+// Runs alongside the chase rather than replacing it, so a knocked-back monster still turns to
+// follow the player as it slides
+function updateKnockback(entry, delta) {
+  const { knockback, model } = entry;
+  if (knockback.lengthSq() < 0.0001) return;
+
+  const nextX = model.position.x + knockback.x * delta;
+  const nextZ = model.position.z + knockback.z * delta;
+  if (!isBlocked(nextX, nextZ)) {
+    model.position.x = nextX;
+    model.position.z = nextZ;
+  }
+
+  knockback.multiplyScalar(Math.max(0, 1 - knockbackDamping * delta));
+  if (knockback.lengthSq() < 0.0001) knockback.set(0, 0, 0);
+}
+
 function updateSingleEnemy(entry, player, delta) {
   const { model } = entry;
+
+  updateHitFlash(entry, delta);
+  updateKnockback(entry, delta);
 
   direction.subVectors(player.position, model.position);
   direction.y = 0;
@@ -60,12 +90,13 @@ function updateSingleEnemy(entry, player, delta) {
     if (entry.attackTimer <= 0) {
       entry.attackTimer = attackCooldown;
       if (state.characterCurrentHealth > 0) {
-        if (state.characterCurrentHealth - entry.attackDamage <= 0) {
-          state.characterCurrentHealth -= entry.attackDamage;
+        state.characterCurrentHealth -= entry.attackDamage;
+        playerHit();
+
+        if (state.characterCurrentHealth <= 0) {
           gameover();
           return;
         }
-        state.characterCurrentHealth -= entry.attackDamage;
       }
     }
     return;

@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import gltfLoader from '@/utils/loader/gltfLoader';
 import { camera } from '@/utils/renderer';
 
+const HIT_COLOR = new THREE.Color(0xff5544);
+
 const BAR_WIDTH = 0.25;
 const BAR_HEIGHT = 0.04;
 export const BAR_Y_OFFSET = 0.3;
@@ -42,9 +44,15 @@ const monster = async (position = { x: 1, y: 0.1, z: 0 }) => {
   model.scale.set(0.05, 0.05, 0.05);
   model.rotation.y = Math.PI * -0.5;
   model.position.set(position.x, position.y - 0.1, position.z);
+  // Cloned per monster, otherwise flashing one would flash every monster sharing the material
+  const flashMaterials = [];
   model.traverse((child) => {
-    if (child.isMesh) {
-      child.castShadow = true;
+    if (!child.isMesh) return;
+    child.castShadow = true;
+    child.material = child.material.clone();
+    if (child.material.emissive) {
+      child.material.userData.baseEmissive = child.material.emissive.clone();
+      flashMaterials.push(child.material);
     }
   });
 
@@ -72,6 +80,13 @@ const monster = async (position = { x: 1, y: 0.1, z: 0 }) => {
 
   play('walk');
 
-  return { model, mixer, play };
+  return { model, mixer, play, flashMaterials };
 };
+
+// amount: 1 at the moment of impact, easing to 0 as the flash decays
+export function setHitFlash(materials, amount) {
+  for (const material of materials) {
+    material.emissive.copy(material.userData.baseEmissive).lerp(HIT_COLOR, amount);
+  }
+}
 export default monster;

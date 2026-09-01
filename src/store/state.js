@@ -10,8 +10,11 @@ const state = {
   money: assetConfig.global.startingMoney,
   characterCurrentHealth: config.character.health,
   characterMaxHealth: config.character.health,
-  monsterHealth: config.monster.health,
   monsters: [],
+  // Night waves, escalating as nights are survived
+  waveSize: 1,
+  monsterHealth: config.monster.health,
+  monsterAttackDamage: config.monster.attackDamage,
   potions: 0,
   attackDamage: config.character.attackDamage,
   wellModel: null,

@@ -30,6 +30,10 @@ export const config = {
     attackDamage: 1,
     attackCooldown: 1.5,
     health: 5,
+    // Waves build to wavePeak, then restart smaller with tougher monsters
+    wavePeak: 5,
+    damageStep: 1,
+    healthStep: 2,
     startingPosition: { x: 1, y: 0.1, z: 0 },
     spawnPoints: [
       {

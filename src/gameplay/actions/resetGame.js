@@ -60,6 +60,9 @@ export function resetGame() {
   state.characterMaxHealth = config.character.health;
   state.attackDamage = config.character.attackDamage;
   state.potions = 0;
+  state.waveSize = 1;
+  state.monsterHealth = config.monster.health;
+  state.monsterAttackDamage = config.monster.attackDamage;
   state.isWellPlaced = false;
   state.isPlantPlaced = false;
   state.isFirstHarvestTaken = false;

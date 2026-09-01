@@ -5,10 +5,7 @@ import state from '@/store/state';
 import models from '@/store/models';
 import { createHealthBar, BAR_Y_OFFSET } from '@/scene/models/other/monster';
 
-const { spawnPoints } = config.monster;
-let spawnCount = 1;
-let attackDamage = config.monster.attackDamage;
-let hp = config.monster.health;
+const { spawnPoints, wavePeak, damageStep, healthStep } = config.monster;
 
 function getRandomSpawnPoint() {
   const point = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
@@ -28,10 +25,11 @@ export async function spawnMonster() {
     model,
     mixer,
     play,
-    health: hp,
+    health: state.monsterHealth,
+    maxHealth: state.monsterHealth,
     attackTimer: 0,
     healthBar,
-    attackDamage,
+    attackDamage: state.monsterAttackDamage,
     flashMaterials,
     hitTimer: 0,
     knockback: new THREE.Vector3(),
@@ -44,14 +42,15 @@ export async function spawnMonster() {
 }
 
 export async function spawnMonsters() {
-  for (let i = 0; i < spawnCount; i++) {
+  for (let i = 0; i < state.waveSize; i++) {
     await spawnMonster();
   }
-  if (spawnCount === 5) {
-    spawnCount = 1;
-    attackDamage = config.monster.attackDamage + 1;
-    hp = config.monster.health + 2;
+
+  if (state.waveSize === wavePeak) {
+    state.waveSize = 1;
+    state.monsterAttackDamage += damageStep;
+    state.monsterHealth += healthStep;
   } else {
-    spawnCount++;
+    state.waveSize++;
   }
 }

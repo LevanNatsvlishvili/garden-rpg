@@ -41,7 +41,7 @@ function updateHealthBar(entry) {
   group.position.y = model.position.y + BAR_Y_OFFSET;
   group.position.z = model.position.z;
 
-  const ratio = Math.max(0, entry.health / config.monster.health);
+  const ratio = Math.max(0, entry.health / entry.maxHealth);
   fgMesh.scale.x = ratio;
   fgMesh.position.x = -(barWidth / 2) * (1 - ratio);
 }

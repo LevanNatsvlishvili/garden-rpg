@@ -8,7 +8,7 @@ const { intensity: defaultAmbient } = config.lights.ambient;
 const { intensity: defaultDirectional } = config.lights.directional;
 
 export function finishNight() {
-  if (state.monsters.length > 0 || state.isDay) return;
+  if (state.monsters.length > 0 || state.isDay || state.isSpawningWave) return;
 
   // Ripens all plants when night is finished
   const allPlants = () => [...state.tomatoes, ...state.cucumbers, ...state.vines];

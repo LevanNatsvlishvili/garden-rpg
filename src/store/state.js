@@ -13,6 +13,7 @@ const state = {
   monsters: [],
   // Night waves, escalating as nights are survived
   waveSize: 1,
+  isSpawningWave: false,
   monsterHealth: config.monster.health,
   monsterAttackDamage: config.monster.attackDamage,
   potions: 0,

@@ -1,6 +1,7 @@
 import { scene } from '@/utils/renderer';
 import { clearOccupied, deactivate } from '@/utils/placementTool';
 import { markStarterLayout } from '@/utils/starterLayout';
+import { cancelSpawning } from '@/gameplay/monsterAI/spawnMonster';
 import { ambientLight, directionalLight } from '@/scene/lights/lights';
 import { torchLight } from '@/scene/models/other/character';
 import { setNightTint } from '@/utils/setNightTint';
@@ -10,6 +11,9 @@ import state from '@/store/state';
 import models from '@/store/models';
 
 export function resetGame() {
+  // Drop any wave still arriving before clearing, so it cannot land in the new game
+  cancelSpawning();
+
   // Remove monsters from scene
   for (const entry of state.monsters) {
     scene.remove(entry.model);
